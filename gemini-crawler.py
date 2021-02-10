@@ -40,7 +40,7 @@ def get_crypto_data(configuration: dict[str, str]) -> dict[str, tuple[str, float
 
 
 def create_display_list(crypto_map: dict[str, tuple[str, float]]) -> list[str]:
-    max_price: str = str(max([round(price, 4) for _, (_, price) in crypto_map.items()]))
+    max_price: str = f"{max([round(price, 4) for _, (_, price) in crypto_map.items()]):.4f}"
     return [f"{name}{(10-len(name))*' '}({symbol}){(4-len(symbol)+len('()')) * ' '}-  $ {(len(max_price)-len(f'{price:.4f}'))* ' '}{price:.4f}" \
         for symbol, (name, price) in crypto_map.items()] 
 
@@ -61,9 +61,10 @@ def create_gemini_page_from_formatted_data(formatted_data: list[str], configurat
 
     return 0, (
         capsule_header + (
-            "\n"
-            f"Prices updated on {datetime.now(timezone.utc).replace(microsecond=0).strftime('%Y-%m-%dT%H:%M UTC')}\n\n"
-            "# Prices\n\n``` Cryptocurrency prices\n") +
+            "## Prices\n"
+            f"Prices updated on {datetime.now(timezone.utc).replace(microsecond=0).strftime('%Y-%m-%dT%H:%M UTC')}\n"
+            "Prices update about every 5 minutes\n\n"
+            "``` Cryptocurrency prices\n") +
         "\n".join(formatted_data) + "\n```\n" +
         capsule_footer
     )
